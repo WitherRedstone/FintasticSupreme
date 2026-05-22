@@ -1,4 +1,4 @@
-package com.chinaex123.fintastic_supreme.event;
+package com.chinaex123.fintastic_supreme.event.fish_finder;
 
 import com.chinaex123.fintastic_supreme.FintasticSupreme;
 import com.chinaex123.fintastic_supreme.data.FSDataComponents;
