@@ -60,30 +60,31 @@ public class FishFinderPacketHandler {
                         fishEntries, lootEntries, crateEntries
                 );
 
-                // 保存到缓存（用于物品切换后仍能读取数据）
+                // 保存到缓存
                 clientCache.put(minecraft.player.getUUID(), data);
 
                 // 同时保存到当前持有的物品
                 if (minecraft.player.getMainHandItem().is(FSItems.FISH_FINDER.get())) {
-                    minecraft.player.getMainHandItem().set(FSDataComponents.FISH_FINDER_DATA.get(), data);
+                    var item = minecraft.player.getMainHandItem();
+                    item.set(FSDataComponents.FISH_FINDER_DATA.get(), data);
                 } else if (minecraft.player.getOffhandItem().is(FSItems.FISH_FINDER.get())) {
-                    minecraft.player.getOffhandItem().set(FSDataComponents.FISH_FINDER_DATA.get(), data);
+                    var item = minecraft.player.getOffhandItem();
+                    item.set(FSDataComponents.FISH_FINDER_DATA.get(), data);
                 }
             } else {
-                // 显示清除提示
-                minecraft.player.displayClientMessage(
-                        Component.translatable("fintastic_supreme.fish_finder.cleared").withStyle(ChatFormatting.RED),
-                        true
-                );
+                minecraft.player.displayClientMessage(Component.translatable("fintastic_supreme.fish_finder.cleared")
+                        .withStyle(ChatFormatting.RED), true);
 
                 // 清除缓存
                 clientCache.remove(minecraft.player.getUUID());
 
                 // 从物品中移除数据
                 if (minecraft.player.getMainHandItem().is(FSItems.FISH_FINDER.get())) {
-                    minecraft.player.getMainHandItem().remove(FSDataComponents.FISH_FINDER_DATA.get());
+                    var item = minecraft.player.getMainHandItem();
+                    item.remove(FSDataComponents.FISH_FINDER_DATA.get());
                 } else if (minecraft.player.getOffhandItem().is(FSItems.FISH_FINDER.get())) {
-                    minecraft.player.getOffhandItem().remove(FSDataComponents.FISH_FINDER_DATA.get());
+                    var item = minecraft.player.getOffhandItem();
+                    item.remove(FSDataComponents.FISH_FINDER_DATA.get());
                 }
             }
         });

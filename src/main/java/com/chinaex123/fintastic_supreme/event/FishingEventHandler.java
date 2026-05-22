@@ -5,18 +5,22 @@ import com.chinaex123.fintastic_supreme.data.FSDataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.List;
 import java.util.Random;
 
 /**
  * 钓鱼事件处理器
- * <p>
  * 作用：监听玩家钓鱼事件，当钓到带有重量数据的鱼时，获取鱼的长度并发送包含详细信息的捕获消息
  */
 @EventBusSubscriber(modid = FintasticSupreme.MOD_ID)
@@ -35,28 +39,91 @@ public class FishingEventHandler {
             return;
         }
 
-        // 获取钓到的所有物品堆列表
         List<ItemStack> drops = event.getDrops();
 
-        // 遍历所有钓到的物品
         for (ItemStack stack : drops) {
-            // 跳过空物品堆
             if (stack.isEmpty()) {
                 continue;
             }
 
-            // 从物品堆中获取重量数据组件
             Double weight = stack.get(FSDataComponents.FISH_WEIGHT.get());
 
-            // 如果重量数据存在且大于0，说明是有效鱼类
             if (weight != null && weight > 0) {
-                // 获取鱼的长度
                 double length = getFishLength(stack);
 
-                // 如果长度有效（大于0），发送捕获消息
                 if (length > 0) {
                     sendCatchMessage(player, stack, length, weight);
                 }
+            }
+        }
+    }
+
+    /**
+     * 监听生物掉落事件
+     * 当带有长度数据的鱼类实体死亡时，如果掉落物没有重量数据，则根据长度计算并添加重量
+     * @param event 生物掉落事件
+     */
+    @SubscribeEvent
+    public static void onLivingDrops(LivingDropsEvent event) {
+        Entity entity = event.getEntity();
+
+        if (entity.level().isClientSide()) {
+            return;
+        }
+
+        for (ItemEntity itemEntity : event.getDrops()) {
+            ItemStack stack = itemEntity.getItem();
+
+            ensureFishWeight(stack);
+        }
+    }
+
+    /**
+     * 监听物品 Tooltip 显示事件
+     * 在客户端显示 Tooltip 时检查并添加重量数据，确保所有来源的鱼都有重量
+     * @param event Tooltip 事件对象
+     */
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+
+        if (!stack.isEmpty() && event.getEntity() != null) {
+            if (!event.getEntity().level().isClientSide()) {
+                return;
+            }
+
+            ensureFishWeight(stack);
+        }
+    }
+
+    /**
+     * 确保鱼类物品有重量数据
+     * 如果物品有长度但没有重量，则根据长度计算并添加重量
+     * @param stack 物品堆对象
+     */
+    public static void ensureFishWeight(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+
+        Double existingWeight = stack.get(FSDataComponents.FISH_WEIGHT.get());
+
+        if (existingWeight == null || existingWeight <= 0) {
+            double length = getFishLength(stack);
+
+            if (length > 0) {
+                /* 基础密度系数 */
+                double baseDensity = 0.001;
+                /* 计算体积：(长度/10)³ */
+                double volume = Math.pow(length / 10.0, 3.0);
+                /* 计算基础重量：体积 × 密度 × 1000 */
+                double weight = volume * baseDensity * 1000;
+                /* 生成随机系数：0.75-1.25 之间的随机值 */
+                double randomFactor = 0.75 + (RANDOM.nextDouble() * 0.5);
+                /* 计算最终重量：基础重量 × 随机系数 */
+                double finalWeight = weight * randomFactor;
+
+                stack.set(FSDataComponents.FISH_WEIGHT.get(), finalWeight);
             }
         }
     }
@@ -68,24 +135,18 @@ public class FishingEventHandler {
      */
     private static double getFishLength(ItemStack stack) {
         try {
-            // 从注册表中获取 Tide 模组的鱼长度数据组件类型
             var tideComponent = BuiltInRegistries.DATA_COMPONENT_TYPE.get(ResourceLocation.parse("tide:fish_length"));
 
-            // 如果组件类型存在
             if (tideComponent != null) {
-                // 从物品堆中获取长度数据
                 Object length = stack.get(tideComponent);
 
-                // 如果长度数据是数字类型，转换为 double 并返回
                 if (length instanceof Number number) {
                     return number.doubleValue();
                 }
             }
         } catch (Exception e) {
-            // 记录获取长度时的错误日志
             FintasticSupreme.LOGGER.error("[FishingEventHandler] 获取鱼的长度时发生错误", e);
         }
-        // 获取失败返回0.0
         return 0.0;
     }
 
@@ -117,6 +178,10 @@ public class FishingEventHandler {
         message = message.replace(String.format("%.2f", length), "§e" + String.format("%.2f", length) + "§7");
         message = message.replace(weightText, "§e" + weightText);
 
-        player.sendSystemMessage(Component.literal(message));
+        ServerLevel serverLevel = (ServerLevel) player.level();
+        serverLevel.getServer().getPlayerList().broadcastSystemMessage(
+                Component.literal(message),
+                false
+        );
     }
 }

@@ -1,4 +1,6 @@
 {
+  "itemGroup.fintastic_supreme_tab": "Fintastic Supreme",
+
   "item.fintastic_supreme.fish_finder": "Fish Finder",
   "item.fintastic_supreme.fish_finder.tooltip.1": "Hold in off-hand while fishing, sneak right-click to save fishing info",
   "item.fintastic_supreme.fish_finder.tooltip.2": "Hold in main-hand when not fishing, sneak right-click to clear data",

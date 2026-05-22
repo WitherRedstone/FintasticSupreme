@@ -3,6 +3,7 @@ package com.chinaex123.fintastic_supreme.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -38,7 +39,7 @@ public record FishFinderStoredData(
     /**
      * 网络流编解码器，用于网络同步
      */
-    public static final StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, FishFinderStoredData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, FishFinderStoredData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(BlockPos.STREAM_CODEC),
             FishFinderStoredData::position,
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
@@ -65,7 +66,7 @@ public record FishFinderStoredData(
                 ).apply(instance, FishEntry::new)
         );
 
-        public static final StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, FishEntry> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, FishEntry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8,
                 FishEntry::name,
                 ByteBufCodecs.DOUBLE,

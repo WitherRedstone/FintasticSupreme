@@ -1,4 +1,6 @@
 {
+  "itemGroup.fintastic_supreme_tab": "鳍妙至极",
+
   "item.fintastic_supreme.fish_finder": "探鱼器",
   "item.fintastic_supreme.fish_finder.tooltip.1": "钓鱼时放在副手，潜行右键保存钓鱼信息",
   "item.fintastic_supreme.fish_finder.tooltip.2": "不钓鱼时，在主手潜行右键清除数据",

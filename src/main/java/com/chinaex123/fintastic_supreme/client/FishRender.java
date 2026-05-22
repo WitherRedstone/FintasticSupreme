@@ -50,8 +50,9 @@
 //
 //        // ========== 渲染鱼模型 ==========
 //        poseStack.pushPose();
-//        poseStack.mulPose(Axis.ZP.rotationDegrees(-30)); // Z轴旋转
-//        poseStack.translate(-0.05, -0.1, -0.5); // 右手位置：X左右, Y上下, Z前后
+//        poseStack.mulPose(Axis.ZP.rotationDegrees(0)); // Z轴旋转
+//        poseStack.mulPose(Axis.YP.rotationDegrees(-30));
+//        poseStack.translate(-0.06, -0.2, -0.3); // 右手位置：X左右, Y上下, Z前后
 //        poseStack.mulPose(Axis.XP.rotationDegrees(-90)); // X轴旋转
 //        poseStack.scale(0.7f, 0.7f, 0.7f); // 鱼的缩放比例
 //
@@ -91,10 +92,10 @@
 //
 //        // ========== 渲染右手 ==========
 //        poseStack.pushPose();
-//        poseStack.translate(0.15, -0.3, -0.15); // 右手位置
-//        poseStack.mulPose(Axis.YP.rotationDegrees(25));  // Y轴旋转
+//        poseStack.translate(0.15, -0.2, -0.15); // 右手位置
+//        poseStack.mulPose(Axis.YP.rotationDegrees(-20));  // Y轴旋转
 //        poseStack.mulPose(Axis.XP.rotationDegrees(-40)); // X轴旋转
-//        poseStack.mulPose(Axis.ZP.rotationDegrees(15));  // Z轴旋转
+//        poseStack.mulPose(Axis.ZP.rotationDegrees(20));  // Z轴旋转
 //        poseStack.scale(0.5f, 0.5f, 0.5f); // 手臂缩放比例
 //        renderArm(mc, player, poseStack, bufferSource, packedLight, partialTicks, mainArm.getOpposite());
 //        poseStack.popPose();

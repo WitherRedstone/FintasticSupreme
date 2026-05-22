@@ -5,6 +5,7 @@ import com.chinaex123.fintastic_supreme.config.FSConfig;
 import com.chinaex123.fintastic_supreme.data.FSDataComponents;
 import com.chinaex123.fintastic_supreme.data.FishFinderStoredData;
 import com.chinaex123.fintastic_supreme.init.FSItems;
+import com.chinaex123.fintastic_supreme.network.FishFinderPacketHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +44,7 @@ public class FishFinderTooltipHandler {
         }
 
         // 优先从缓存读取
-        FishFinderStoredData storedData = com.chinaex123.fintastic_supreme.network.FishFinderPacketHandler.getCachedData(player.getUUID());
+        FishFinderStoredData storedData = FishFinderPacketHandler.getCachedData(player.getUUID());
 
         // 如果缓存为空，尝试从物品栏读取
         if (storedData == null) {

@@ -2,6 +2,7 @@ package com.chinaex123.fintastic_supreme;
 
 import com.chinaex123.fintastic_supreme.config.FSConfig;
 import com.chinaex123.fintastic_supreme.data.FSDataComponents;
+import com.chinaex123.fintastic_supreme.init.FSCreativeTabs;
 import com.chinaex123.fintastic_supreme.init.FSItems;
 import com.chinaex123.fintastic_supreme.network.FishFinderDataPacket;
 import com.chinaex123.fintastic_supreme.network.FishFinderPacketHandler;
@@ -21,10 +22,13 @@ public class FintasticSupreme {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public FintasticSupreme(IEventBus modEventBus, ModContainer modContainer) {
-        FSItems.ITEMS_REGISTER.register(modEventBus);
         FSDataComponents.DATA_COMPONENTS.register(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.COMMON, FSConfig.SPEC);
         modEventBus.addListener(this::registerPackets);
+
+        FSItems.register(modEventBus);
+        FSCreativeTabs.register(modEventBus);
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, FSConfig.SPEC);
     }
 
     private void registerPackets(RegisterPayloadHandlersEvent event) {
