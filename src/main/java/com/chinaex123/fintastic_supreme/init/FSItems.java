@@ -11,7 +11,7 @@ public interface FSItems {
     DeferredRegister.Items ITEMS_REGISTER = DeferredRegister.createItems(FintasticSupreme.MOD_ID);
 
     DeferredItem<Item> FISH_FINDER = ITEMS_REGISTER.register("fish_finder", () ->
-            new Item(new Item.Properties().rarity(Rarity.EPIC)));
+            new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
     static void register(IEventBus eventBus) {
         ITEMS_REGISTER.register(eventBus);

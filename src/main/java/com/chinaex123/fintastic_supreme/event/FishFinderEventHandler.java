@@ -2,6 +2,7 @@ package com.chinaex123.fintastic_supreme.event;
 
 import com.chinaex123.fintastic_supreme.FintasticSupreme;
 import com.chinaex123.fintastic_supreme.data.FSDataComponents;
+import com.chinaex123.fintastic_supreme.data.FishFinderStoredData;
 import com.chinaex123.fintastic_supreme.init.FSItems;
 import com.chinaex123.fintastic_supreme.network.FishFinderDataPacket;
 import com.li64.tide.Tide;
@@ -67,28 +68,14 @@ public class FishFinderEventHandler {
         // 获取玩家的钓鱼钩
         TideFishingHook hook = HookAccessor.getHook(serverPlayer);
 
-        // 如果主手持探鱼器，且有数据时清除
+        // 如果主手持探鱼器，发送清除包
         if (mainHandHasFinder) {
-            // 检查当前是否有数据（从玩家物品栏检查）
-            var mainHandItem = serverPlayer.getMainHandItem();
-            var offhandItem = serverPlayer.getOffhandItem();
-
-            boolean hasData = false;
-            if (mainHandItem.is(FSItems.FISH_FINDER.get())) {
-                hasData = mainHandItem.has(FSDataComponents.FISH_FINDER_DATA.get());
-            } else if (offhandItem.is(FSItems.FISH_FINDER.get())) {
-                hasData = offhandItem.has(FSDataComponents.FISH_FINDER_DATA.get());
-            }
-
-            // 只有在有数据时才发送清除包
-            if (hasData) {
-                PacketDistributor.sendToPlayer(serverPlayer, new FishFinderDataPacket(
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(), List.of(), List.of()
-                ));
-                event.setCanceled(true);
-            }
+            PacketDistributor.sendToPlayer(serverPlayer, new FishFinderDataPacket(
+                    Optional.empty(),
+                    Optional.empty(),
+                    List.of(), List.of(), List.of()
+            ));
+            event.setCanceled(true);
             return;
         }
 
@@ -102,29 +89,35 @@ public class FishFinderEventHandler {
             List<FishFinderDataPacket.FishEntry> lootData = convertResults(lootResults);
             List<FishFinderDataPacket.FishEntry> crateData = convertResults(crateResults);
 
-            // 获取钓点坐标和群系
             BlockPos hookPos = serverPlayer.blockPosition();
             var biomeHolder = serverPlayer.level().getBiome(hookPos);
 
-            // 尝试获取群系的本地化名称
             String biomeName = biomeHolder.unwrapKey()
                     .flatMap(key -> {
-                        // 尝试从注册表获取本地化名称
                         var biomeResourceLocation = key.location();
                         String translationKey = "biome." + biomeResourceLocation.getNamespace() + "." + biomeResourceLocation.getPath();
                         var component = Component.translatable(translationKey);
-                        // 检查是否有翻译，如果没有则返回空
                         if (component.getString().equals(translationKey)) {
                             return Optional.empty();
                         }
                         return Optional.of(component.getString());
                     })
                     .orElseGet(() -> {
-                        // 如果没有本地化，使用注册名
                         return biomeHolder.unwrapKey()
                                 .map(key -> key.location().toString())
                                 .orElse("unknown");
                     });
+
+            // 先在服务端设置数据到物品组件
+            var offhandItem = serverPlayer.getOffhandItem();
+            FishFinderStoredData storedData = new FishFinderStoredData(
+                    Optional.of(hookPos),
+                    Optional.of(biomeName),
+                    fishData.stream().map(e -> new FishFinderStoredData.FishEntry(e.name(), e.probability())).collect(Collectors.toList()),
+                    lootData.stream().map(e -> new FishFinderStoredData.FishEntry(e.name(), e.probability())).collect(Collectors.toList()),
+                    crateData.stream().map(e -> new FishFinderStoredData.FishEntry(e.name(), e.probability())).collect(Collectors.toList())
+            );
+            offhandItem.set(FSDataComponents.FISH_FINDER_DATA.get(), storedData);
 
             PacketDistributor.sendToPlayer(serverPlayer, new FishFinderDataPacket(
                     Optional.of(hookPos),
