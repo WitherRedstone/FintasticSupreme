@@ -1,0 +1,17 @@
+{
+  "item.fintastic_supreme.fish_finder": "探鱼器",
+  "item.fintastic_supreme.fish_finder.tooltip.1": "钓鱼时放在副手，潜行右键保存钓鱼信息",
+  "item.fintastic_supreme.fish_finder.tooltip.2": "不钓鱼时，在主手潜行右键清除数据",
+
+  "fintastic_supreme.fishing.caught": "%s 钓到了 %s，长度 %s cm，重量 %s",
+  "fintastic_supreme.tooltip.weight_kg": "%s kg",
+  "fintastic_supreme.tooltip.weight_g": "%s g",
+  "fintastic_supreme.fish_finder.tooltip_title": "当前钓点信息",
+  "fintastic_supreme.fish_finder.stored": "已存储当前钓鱼点信息",
+  "fintastic_supreme.fish_finder.cleared": "已清除钓鱼点信息",
+  "fintastic_supreme.fish_finder.fish_title": "鱼类:",
+  "fintastic_supreme.fish_finder.loot_title": "战利品:",
+  "fintastic_supreme.fish_finder.crate_title": "箱子:",
+  "fintastic_supreme.fish_finder.position": "钓点坐标: (%d, %d, %d)",
+  "fintastic_supreme.fish_finder.biome": "钓点群系: %s"
+}

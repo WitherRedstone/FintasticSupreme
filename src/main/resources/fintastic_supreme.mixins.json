@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.chinaex123.fintastic_supreme.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "FishDataMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

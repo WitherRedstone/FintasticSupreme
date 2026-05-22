@@ -1,0 +1,17 @@
+{
+  "item.fintastic_supreme.fish_finder": "Fish Finder",
+  "item.fintastic_supreme.fish_finder.tooltip.1": "Hold in off-hand while fishing, sneak right-click to save fishing info",
+  "item.fintastic_supreme.fish_finder.tooltip.2": "Hold in main-hand when not fishing, sneak right-click to clear data",
+
+  "fintastic_supreme.fishing.caught": "%s caught %s, length %s cm, weight %s",
+  "fintastic_supreme.tooltip.weight_kg": "%s kg",
+  "fintastic_supreme.tooltip.weight_g": "%s g",
+  "fintastic_supreme.fish_finder.tooltip_title": "Current Spot Info",
+  "fintastic_supreme.fish_finder.stored": "Stored current fishing spot info",
+  "fintastic_supreme.fish_finder.cleared": "Cleared fishing spot info",
+  "fintastic_supreme.fish_finder.fish_title": "Fish:",
+  "fintastic_supreme.fish_finder.loot_title": "Loot:",
+  "fintastic_supreme.fish_finder.crate_title": "Crates:",
+  "fintastic_supreme.fish_finder.position": "Fishing Spot: (%d, %d, %d)",
+  "fintastic_supreme.fish_finder.biome": "Biome: %s"
+}
