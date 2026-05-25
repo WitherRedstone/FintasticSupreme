@@ -1,4 +1,4 @@
-# 🎣 鳍妙至极（Fin-tastic Supreme）功能分类文档
+# 🎣 鳍妙至极（Fintastic Supreme）功能分类文档
 
 [English](#english) | [中文](#中文)
 

@@ -6,6 +6,7 @@ import com.chinaex123.fintastic_supreme.init.FSItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
@@ -41,14 +42,12 @@ public class FishFinderPacketHandler {
             }
 
             // 播放使用动作
-            minecraft.player.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+            minecraft.player.swing(InteractionHand.MAIN_HAND);
 
             if (hasData) {
                 // 显示存储提示
-                minecraft.player.displayClientMessage(
-                        Component.translatable("fintastic_supreme.fish_finder.stored").withStyle(ChatFormatting.GREEN),
-                        true
-                );
+                minecraft.player.displayClientMessage(Component.translatable("fintastic_supreme.fish_finder.stored")
+                        .withStyle(ChatFormatting.GREEN), true);
 
                 // 转换数据格式
                 List<FishFinderStoredData.FishEntry> fishEntries = convertToStoredData(packet.fish());
