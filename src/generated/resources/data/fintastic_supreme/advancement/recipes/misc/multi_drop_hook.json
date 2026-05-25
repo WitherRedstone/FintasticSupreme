@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_advanced_magnetic_bait_diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_advanced_magnetic_bait_emerald": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/emerald"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_advanced_magnetic_bait_multi_drop_hook": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fintastic_supreme:multi_drop_hook"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fintastic_supreme:multi_drop_hook"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_advanced_magnetic_bait_emerald",
+      "has_advanced_magnetic_bait_multi_drop_hook",
+      "has_advanced_magnetic_bait_diamond"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fintastic_supreme:multi_drop_hook"
+    ]
+  }
+}

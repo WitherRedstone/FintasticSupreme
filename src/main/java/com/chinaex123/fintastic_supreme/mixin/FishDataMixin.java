@@ -1,3 +1,13 @@
+/*
+ * SPDX-License-Identifier: MPL-2.0
+ * SPDX-FileCopyrightText: 2026 [ChinaEX123]
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Based on/modified from [Tide] (Copyright [Lightning64])
+ */
 package com.chinaex123.fintastic_supreme.mixin;
 
 import com.chinaex123.fintastic_supreme.FintasticSupreme;

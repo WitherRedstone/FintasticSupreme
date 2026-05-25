@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "fintastic_supreme:item/master_lucky_bait"
+  }
+}

@@ -20,7 +20,32 @@ public class FSCreativeTabs {
                     .title(Component.translatable("itemGroup.fintastic_supreme_tab"))
                     .displayItems((parameters, output) -> {
 
+                        // 探鱼器
                         output.accept(FSItems.FISH_FINDER.get());
+
+                        // 鱼饵
+                        output.accept(FSItems.ADVANCED_BAIT.get());
+                        output.accept(FSItems.MASTER_BAIT.get());
+                        // 幸运鱼饵
+                        output.accept(FSItems.ADVANCED_LUCKY_BAIT.get());
+                        output.accept(FSItems.MASTER_LUCKY_BAIT.get());
+                        // 组合鱼饵
+                        output.accept(FSItems.MIXED_BAIT.get());
+                        output.accept(FSItems.ADVANCED_MIXED_BAIT.get());
+                        output.accept(FSItems.MASTER_MIXED_BAIT.get());
+                        // 磁力鱼饵
+                        output.accept(FSItems.ADVANCED_MAGNETIC_BAIT.get());
+                        output.accept(FSItems.MASTER_MAGNETIC_BAIT.get());
+
+                        // 双倍钓钩
+                        output.accept(FSItems.DOUBLE_CATCH_HOOK.get());
+                        // 多重掉落钓钩
+                        output.accept(FSItems.MULTI_DROP_HOOK.get());
+
+                        // 幸运传导鱼线
+                        output.accept(FSItems.LUCKY_LINE.get());
+                        // 轻盈鱼线
+                        output.accept(FSItems.LIGHTWEIGHT_LINE.get());
                     })
                     .build());
 

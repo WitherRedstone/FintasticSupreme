@@ -16,8 +16,10 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * 钓鱼事件处理器
@@ -27,6 +29,9 @@ import java.util.Random;
 public class FishingEventHandler {
     private static final Random RANDOM = new Random();
 
+    // 用于记录最近一次发送消息的玩家和物品，防止双倍掉落时重复刷屏
+    private static final Set<String> lastSentMessages = new HashSet<>();
+
     /**
      * 监听钓鱼完成事件
      * @param event 钓鱼事件对象，包含钓到的物品列表和玩家信息
@@ -34,27 +39,44 @@ public class FishingEventHandler {
     @SubscribeEvent
     public static void onItemFished(ItemFishedEvent event) {
         Player player = event.getEntity();
-
-        if (player.level().isClientSide()) {
-            return;
-        }
+        if (player.level().isClientSide()) return;
 
         List<ItemStack> drops = event.getDrops();
 
+        // 用于记录本次事件中已经发送过的消息，防止同一次钓鱼触发多次
+        Set<String> currentSessionMessages = new HashSet<>();
+
         for (ItemStack stack : drops) {
-            if (stack.isEmpty()) {
+            if (stack.isEmpty()) continue;
+
+            Double weight = stack.get(FSDataComponents.FISH_WEIGHT.get());
+            if (weight == null || weight <= 0) continue;
+
+            double length = getFishLength(stack);
+            if (length <= 0) continue;
+
+            String playerName = player.getName().getString();
+            String fishName = stack.getHoverName().getString();
+
+            // 构造消息字符串用于去重判断
+            String messageKey = String.format("%s|%s|%.2f|%.2f", playerName, fishName, length, weight);
+
+            // 全局去重 + 本次会话去重
+            if (lastSentMessages.contains(messageKey) || currentSessionMessages.contains(messageKey)) {
                 continue;
             }
 
-            Double weight = stack.get(FSDataComponents.FISH_WEIGHT.get());
+            // 调用 sendCatchMessage 发送消息
+            sendCatchMessage(player, stack, length, weight);
 
-            if (weight != null && weight > 0) {
-                double length = getFishLength(stack);
+            // 加入记录
+            currentSessionMessages.add(messageKey);
+            lastSentMessages.add(messageKey);
+        }
 
-                if (length > 0) {
-                    sendCatchMessage(player, stack, length, weight);
-                }
-            }
+        // 简单的清理机制，防止内存泄漏
+        if (lastSentMessages.size() > 20) {
+            lastSentMessages.clear();
         }
     }
 

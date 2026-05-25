@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:clock"
+    },
+    "B": {
+      "tag": "c:gems/diamond"
+    },
+    "C": {
+      "tag": "c:gems/amethyst"
+    },
+    "D": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "fintastic_supreme:fish_finder"
+  }
+}

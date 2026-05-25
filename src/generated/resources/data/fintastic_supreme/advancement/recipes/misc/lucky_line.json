@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lucky_line_emerald": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/emerald"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lucky_line_fishing_line": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tide:fishing_line"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fintastic_supreme:lucky_line"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lucky_line_fishing_line",
+      "has_lucky_line_emerald"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fintastic_supreme:lucky_line"
+    ]
+  }
+}

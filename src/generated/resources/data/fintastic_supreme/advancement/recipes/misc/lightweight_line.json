@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lightweight_line_feather": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:feather"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lightweight_line_fishing_line": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tide:fishing_line"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fintastic_supreme:lightweight_line"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lightweight_line_fishing_line",
+      "has_lightweight_line_feather"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fintastic_supreme:lightweight_line"
+    ]
+  }
+}

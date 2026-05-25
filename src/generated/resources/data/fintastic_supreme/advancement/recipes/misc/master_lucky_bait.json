@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_master_lucky_bait_advanced_lucky_bait": {
+      "conditions": {
+        "items": [
+          {
+            "items": "fintastic_supreme:advanced_lucky_bait"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_master_lucky_bait_amethyst": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/amethyst"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_master_lucky_bait_diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "fintastic_supreme:master_lucky_bait"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_master_lucky_bait_amethyst",
+      "has_master_lucky_bait_advanced_lucky_bait",
+      "has_master_lucky_bait_diamond"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "fintastic_supreme:master_lucky_bait"
+    ]
+  }
+}

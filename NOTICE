@@ -1,0 +1,10 @@
+Third-Party Licenses
+
+This project includes code modified from the following open source project:
+
+- [Tide] (Copyright [Lightning64])
+  Licensed under the Mozilla Public License 2.0 (MPL-2.0)
+  The modified source code can be found in the src/mixin/ directory.
+  A copy of the MPL-2.0 license is included in this distribution as LICENSE-MPL.
+
+Modifications made by [ChinaEX123] (Copyright 2026)

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "tide:bait"
+    },
+    "B": {
+      "item": "tide:lucky_bait"
+    }
+  },
+  "pattern": [
+    "AB ",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "fintastic_supreme:mixed_bait"
+  }
+}

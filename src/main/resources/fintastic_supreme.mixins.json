@@ -3,7 +3,9 @@
   "package": "com.chinaex123.fintastic_supreme.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FishDataMixin"
+    "FishDataMixin",
+    "FishingHookMixin",
+    "BaitUtilsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
