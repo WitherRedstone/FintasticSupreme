@@ -35,6 +35,12 @@ public class FishFinderEventHandler {
 
     /**
      * 监听玩家右键点击事件
+     * <p>
+     * 当玩家右键点击时，检查是否正在潜行，是否持有探鱼器，是否正在钓鱼钩上。
+     * 如果以上条件都满足，发送钓点概率数据到客户端。
+     * <p>
+     * 否则，发送清除包到客户端，清除所有数据。
+     *
      * @param event 右键事件对象
      */
     @SubscribeEvent
@@ -102,11 +108,9 @@ public class FishFinderEventHandler {
                         }
                         return Optional.of(component.getString());
                     })
-                    .orElseGet(() -> {
-                        return biomeHolder.unwrapKey()
-                                .map(key -> key.location().toString())
-                                .orElse("unknown");
-                    });
+                    .orElseGet(() -> biomeHolder.unwrapKey()
+                            .map(key -> key.location().toString())
+                            .orElse("unknown"));
 
             // 先在服务端设置数据到物品组件
             var offhandItem = serverPlayer.getOffhandItem();
@@ -130,6 +134,7 @@ public class FishFinderEventHandler {
 
     /**
      * 转换结果为网络包格式
+     *
      * @param results 原始结果
      * @return 转换后的列表
      */

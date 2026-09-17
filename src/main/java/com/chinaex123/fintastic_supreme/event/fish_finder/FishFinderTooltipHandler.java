@@ -25,6 +25,7 @@ public class FishFinderTooltipHandler {
 
     /**
      * 监听物品 Tooltip 显示事件
+     *
      * @param event Tooltip 事件对象
      */
     @SubscribeEvent
@@ -85,13 +86,13 @@ public class FishFinderTooltipHandler {
         }
 
         event.getToolTip().add(Component.literal("──────────────").withStyle(ChatFormatting.GRAY));
-        event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.tooltip_title").withStyle(ChatFormatting.GOLD));
+        event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.tooltip_title").withStyle(ChatFormatting.GOLD));
 
         // 显示钓点信息
         if (showPosition) {
             storedData.position().ifPresent(pos -> {
                 event.getToolTip().add(Component.literal(""));
-                event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.position",
+                event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.position",
                         pos.getX(), pos.getY(), pos.getZ()).withStyle(ChatFormatting.AQUA));
             });
         }
@@ -101,34 +102,35 @@ public class FishFinderTooltipHandler {
                 if (!showPosition) {
                     event.getToolTip().add(Component.literal(""));
                 }
-                event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.biome", biome).withStyle(ChatFormatting.AQUA));
+                event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.biome", biome).withStyle(ChatFormatting.AQUA));
             });
         }
 
         // 显示鱼类概率
         if (showFish && !fishData.isEmpty()) {
             event.getToolTip().add(Component.literal(""));
-            event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.fish_title").withStyle(ChatFormatting.YELLOW));
+            event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.fish_title").withStyle(ChatFormatting.YELLOW));
             displayResults(event.getToolTip(), fishData);
         }
 
         // 显示战利品概率
         if (showLoot && !lootData.isEmpty()) {
             event.getToolTip().add(Component.literal(""));
-            event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.loot_title").withStyle(ChatFormatting.YELLOW));
+            event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.loot_title").withStyle(ChatFormatting.YELLOW));
             displayResults(event.getToolTip(), lootData);
         }
 
         // 显示箱子概率
         if (showCrate && !crateData.isEmpty()) {
             event.getToolTip().add(Component.literal(""));
-            event.getToolTip().add(Component.translatable("fintastic_supreme.fish_finder.crate_title").withStyle(ChatFormatting.YELLOW));
+            event.getToolTip().add(Component.translatable("message.fintastic_supreme.fish_finder.crate_title").withStyle(ChatFormatting.YELLOW));
             displayResults(event.getToolTip(), crateData);
         }
     }
 
     /**
      * 格式化并显示结果到 Tooltip
+     *
      * @param toolTip Tooltip 列表
      * @param entries 数据条目列表
      */

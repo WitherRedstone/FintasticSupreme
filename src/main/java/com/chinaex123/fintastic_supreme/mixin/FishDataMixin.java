@@ -13,6 +13,7 @@ package com.chinaex123.fintastic_supreme.mixin;
 import com.chinaex123.fintastic_supreme.FintasticSupreme;
 import com.chinaex123.fintastic_supreme.event.FishingEventHandler;
 import com.li64.tide.data.fishing.CatchResult;
+import com.li64.tide.data.fishing.FishData;
 import com.li64.tide.data.fishing.FishingContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,17 +24,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 /**
- * 鱼类数据 Mixin
- * 作用：在 Tide 模组生成钓鱼结果时，为钓到的鱼添加重量数据组件
+ * 鱼类数据 Mixin。
+ * <p>
+ * 作用：在 Tide 模组生成钓鱼结果时，为钓到的鱼添加重量数据组件。
+ * 通过注入 FishData.getResult() 方法的返回点，从结果对象中提取物品堆，
+ * 再交由 FishingEventHandler 补充重量数据。
  */
-@Mixin(targets = "com.li64.tide.data.fishing.FishData")
+@Mixin(FishData.class)
 public class FishDataMixin {
 
     /**
-     * 注入到 FishData.getResult() 方法的返回点
-     * 在钓鱼结果生成后，为钓到的鱼添加重量数据
+     * 注入到 FishData.getResult() 方法的返回点。
+     * <p>
+     * 在钓鱼结果生成后，通过反射从结果对象中提取物品堆，
+     * 并为其添加重量数据。支持字段类型为 ItemStack 或 List 两种情况。
+     *
      * @param context 钓鱼上下文对象
-     * @param cir 回调信息，用于获取和修改返回值
+     * @param cir     回调信息，用于获取和修改返回值
      */
     @Inject(method = "getResult", at = @At("RETURN"), remap = false)
     private void injectWeight(FishingContext context, CallbackInfoReturnable<CatchResult> cir) {
@@ -68,7 +75,7 @@ public class FishDataMixin {
 
             FishingEventHandler.ensureFishWeight(stack);
         } catch (Exception e) {
-            FintasticSupreme.LOGGER.error("[FishDataMixin] 处理过程中发生错误", e);
+            FintasticSupreme.LOGGER.error("[FishDataMixin.injectWeight] 处理过程中发生错误", e);
         }
     }
 }

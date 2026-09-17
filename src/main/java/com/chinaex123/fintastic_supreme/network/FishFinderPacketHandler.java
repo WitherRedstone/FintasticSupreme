@@ -16,24 +16,31 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * 探鱼器网络包处理器
+ * 探鱼器网络包处理器。
  * <p>
- * 作用：处理服务端发送的钓鱼数据到客户端，并将数据存储到物品组件中
+ * 作用：处理服务端发送的钓鱼数据到客户端，并将数据存储到物品组件中。
+ * 同时维护按玩家 UUID 索引的客户端缓存，用于解决物品切换时数据丢失的问题。
  */
 public class FishFinderPacketHandler {
+
     /**
-     * 客户端数据缓存，按玩家UUID存储
-     * 用于解决物品切换时数据丢失的问题
+     * 客户端数据缓存，按玩家 UUID 存储。
+     * 用于解决物品切换时数据丢失的问题。
      */
     private static final Map<UUID, FishFinderStoredData> clientCache = new HashMap<>();
 
     /**
-     * 处理探鱼器数据包
-     * @param packet 数据包
+     * 处理探鱼器数据包。
+     * <p>
+     * 在主线程中执行：若数据包包含有效数据，则将数据转换后存入缓存与手中物品；
+     * 若数据为空，则清除缓存与物品上的数据，并向玩家显示相应提示。
+     *
+     * @param packet  数据包
      * @param context 上下文
      */
     public static void handle(FishFinderDataPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
+            // 判断数据包是否包含任意有效条目
             boolean hasData = !packet.fish().isEmpty() || !packet.loot().isEmpty() || !packet.crates().isEmpty();
 
             Minecraft minecraft = Minecraft.getInstance();
@@ -46,7 +53,7 @@ public class FishFinderPacketHandler {
 
             if (hasData) {
                 // 显示存储提示
-                minecraft.player.displayClientMessage(Component.translatable("fintastic_supreme.fish_finder.stored")
+                minecraft.player.displayClientMessage(Component.translatable("message.fintastic_supreme.fish_finder.stored")
                         .withStyle(ChatFormatting.GREEN), true);
 
                 // 转换数据格式
@@ -71,7 +78,8 @@ public class FishFinderPacketHandler {
                     item.set(FSDataComponents.FISH_FINDER_DATA.get(), data);
                 }
             } else {
-                minecraft.player.displayClientMessage(Component.translatable("fintastic_supreme.fish_finder.cleared")
+                // 显示清除提示
+                minecraft.player.displayClientMessage(Component.translatable("message.fintastic_supreme.fish_finder.cleared")
                         .withStyle(ChatFormatting.RED), true);
 
                 // 清除缓存
@@ -90,16 +98,18 @@ public class FishFinderPacketHandler {
     }
 
     /**
-     * 获取玩家的缓存数据
-     * @param playerId 玩家UUID
-     * @return 存储的数据，如果不存在返回null
+     * 获取玩家的缓存数据。
+     *
+     * @param playerId 玩家 UUID
+     * @return 存储的数据，如果不存在返回 null
      */
     public static FishFinderStoredData getCachedData(UUID playerId) {
         return clientCache.get(playerId);
     }
 
     /**
-     * 转换网络包数据为存储数据格式
+     * 转换网络包数据为存储数据格式。
+     *
      * @param entries 网络包数据列表
      * @return 存储数据列表
      */

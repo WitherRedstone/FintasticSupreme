@@ -23,17 +23,19 @@ import java.util.Set;
 
 /**
  * 钓鱼事件处理器
- * 作用：监听玩家钓鱼事件，当钓到带有重量数据的鱼时，获取鱼的长度并发送包含详细信息的捕获消息
+ * <p>
+ * 监听玩家钓鱼事件，当钓到带有重量数据的鱼时，获取鱼的长度并发送包含详细信息的捕获消息
  */
 @EventBusSubscriber(modid = FintasticSupreme.MOD_ID)
 public class FishingEventHandler {
     private static final Random RANDOM = new Random();
 
-    // 用于记录最近一次发送消息的玩家和物品，防止双倍掉落时重复刷屏
+    /** 记录最近一次发送消息的玩家和物品 */
     private static final Set<String> lastSentMessages = new HashSet<>();
 
     /**
      * 监听钓鱼完成事件
+     *
      * @param event 钓鱼事件对象，包含钓到的物品列表和玩家信息
      */
     @SubscribeEvent
@@ -82,7 +84,9 @@ public class FishingEventHandler {
 
     /**
      * 监听生物掉落事件
+     * <p>
      * 当带有长度数据的鱼类实体死亡时，如果掉落物没有重量数据，则根据长度计算并添加重量
+     *
      * @param event 生物掉落事件
      */
     @SubscribeEvent
@@ -102,7 +106,9 @@ public class FishingEventHandler {
 
     /**
      * 监听物品 Tooltip 显示事件
+     * <p>
      * 在客户端显示 Tooltip 时检查并添加重量数据，确保所有来源的鱼都有重量
+     *
      * @param event Tooltip 事件对象
      */
     @SubscribeEvent
@@ -120,7 +126,9 @@ public class FishingEventHandler {
 
     /**
      * 确保鱼类物品有重量数据
+     * <p>
      * 如果物品有长度但没有重量，则根据长度计算并添加重量
+     *
      * @param stack 物品堆对象
      */
     public static void ensureFishWeight(ItemStack stack) {
@@ -134,17 +142,9 @@ public class FishingEventHandler {
             double length = getFishLength(stack);
 
             if (length > 0) {
-                /* 基础密度系数 */
-                double baseDensity = 0.001;
-                /* 计算体积：(长度/10)³ */
-                double volume = Math.pow(length / 10.0, 3.0);
-                /* 计算基础重量：体积 × 密度 × 1000 */
-                double weight = volume * baseDensity * 1000;
-                /* 生成随机系数：0.75-1.25 之间的随机值 */
-                double randomFactor = 0.75 + (RANDOM.nextDouble() * 0.5);
-                /* 计算最终重量：基础重量 × 随机系数 */
-                double finalWeight = weight * randomFactor;
-
+                /* 计算最终重量：length × (length × 0.7) × (length × 0.3) × random(0.1~0.25)，单位为克 */
+                double randomFactor = 0.1 + (RANDOM.nextDouble() * 0.15);
+                double finalWeight = length * (length * 0.7) * (length * 0.3) * randomFactor;
                 stack.set(FSDataComponents.FISH_WEIGHT.get(), finalWeight);
             }
         }
@@ -152,6 +152,7 @@ public class FishingEventHandler {
 
     /**
      * 从物品堆中获取鱼的长度数据
+     *
      * @param stack 物品堆对象
      * @return 鱼的长度（厘米），如果获取失败返回0.0
      */
@@ -167,32 +168,33 @@ public class FishingEventHandler {
                 }
             }
         } catch (Exception e) {
-            FintasticSupreme.LOGGER.error("[FishingEventHandler] 获取鱼的长度时发生错误", e);
+            FintasticSupreme.LOGGER.error("[FishingEventHandler.getFishLength] 获取鱼的长度时发生错误", e);
         }
         return 0.0;
     }
 
     /**
      * 发送钓鱼捕获消息给玩家
+     *
      * @param player 玩家对象
      * @param stack 钓到的鱼物品堆
      * @param length 鱼的长度（厘米）
-     * @param weight 鱼的重量（千克）
+     * @param weight 鱼的重量（克）
      */
     private static void sendCatchMessage(Player player, ItemStack stack, double length, double weight) {
         String fishName = stack.getHoverName().getString();
         String playerName = player.getName().getString();
 
         String weightText;
-        if (weight >= 1000.0) {
-            weightText = String.format("%.2f t", weight / 1000);
-        } else if (weight >= 1.0) {
-            weightText = String.format("%.2f kg", weight);
+        if (weight >= 1000000.0) {
+            weightText = String.format("%.2f t", weight / 1000000);
+        } else if (weight >= 1000.0) {
+            weightText = String.format("%.2f kg", weight / 1000);
         } else {
-            weightText = String.format("%.2f g", weight * 1000);
+            weightText = String.format("%.2f g", weight);
         }
 
-        String template = Component.translatable("fintastic_supreme.fishing.caught",
+        String template = Component.translatable("message.fintastic_supreme.fishing.caught",
                 playerName, fishName, String.format("%.2f", length), weightText).getString();
 
         String message = "§b" + template;
@@ -201,9 +203,6 @@ public class FishingEventHandler {
         message = message.replace(weightText, "§e" + weightText);
 
         ServerLevel serverLevel = (ServerLevel) player.level();
-        serverLevel.getServer().getPlayerList().broadcastSystemMessage(
-                Component.literal(message),
-                false
-        );
+        serverLevel.getServer().getPlayerList().broadcastSystemMessage(Component.literal(message), false);
     }
 }

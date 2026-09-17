@@ -11,7 +11,7 @@
 package com.chinaex123.fintastic_supreme.mixin;
 
 import com.chinaex123.fintastic_supreme.init.FSItems;
-import com.chinaex123.fintastic_supreme.util.FSBaitConfig;
+import com.chinaex123.fintastic_supreme.config.FSConfig;
 import com.li64.tide.data.rods.CustomRodManager;
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHook;
 import net.minecraft.world.entity.player.Player;
@@ -58,7 +58,7 @@ public abstract class FishingHookMixin {
         ItemStack lineItem = CustomRodManager.getLine(this.rod);
 
         if (lineItem.is(FSItems.LIGHTWEIGHT_LINE.get())) {
-            int extendedNibble = (int)(this.nibble * FSBaitConfig.LIGHTWEIGHT_LINE_ESCAPE_MULTIPLIER);
+            int extendedNibble = (int) Math.round(this.nibble * FSConfig.LIGHTWEIGHT_LINE_ESCAPE_MULTIPLIER.get());
             this.nibble = Math.min(extendedNibble, 100);
         }
     }
@@ -93,7 +93,7 @@ public abstract class FishingHookMixin {
 
         // 处理双倍掉落钓钩
         if (hookItem.is(FSItems.DOUBLE_CATCH_HOOK.get())) {
-            if (tideHook.level().random.nextFloat() < FSBaitConfig.DOUBLE_CATCH_CHANCE) {
+            if (tideHook.level().random.nextFloat() < FSConfig.DOUBLE_CATCH_CHANCE.get()) {
                 for (ItemStack stack : this.hookedItems) {
                     currentDrops.add(stack.copy());
                 }
@@ -102,8 +102,8 @@ public abstract class FishingHookMixin {
 
         // 处理多重掉落钓钩
         if (hookItem.is(FSItems.MULTI_DROP_HOOK.get())) {
-            if (tideHook.level().random.nextFloat() < FSBaitConfig.MULTI_DROP_CHANCE) {
-                int extraCount = tideHook.level().random.nextInt(FSBaitConfig.MULTI_DROP_MAX_EXTRA) + 1;
+            if (tideHook.level().random.nextFloat() < FSConfig.MULTI_DROP_CHANCE.get()) {
+                int extraCount = tideHook.level().random.nextInt(FSConfig.MULTI_DROP_MAX_EXTRA.get()) + 1;
                 for (int i = 0; i < extraCount; i++) {
                     for (ItemStack stack : this.hookedItems) {
                         currentDrops.add(stack.copy());
@@ -118,7 +118,7 @@ public abstract class FishingHookMixin {
             if (player != null) {
                 float luck = player.getLuck();
                 // 幸运值越高，触发额外掉落的概率越大
-                if (luck > 0 && tideHook.level().random.nextFloat() < (luck * (float) FSBaitConfig.LUCKY_LINE_LUCK_TO_CHANCE)) {
+                if (luck > 0 && tideHook.level().random.nextFloat() < (luck * (float) FSConfig.LUCKY_LINE_LUCK_TO_CHANCE.get().doubleValue())) {
                     for (ItemStack stack : this.hookedItems) {
                         currentDrops.add(stack.copy());
                     }

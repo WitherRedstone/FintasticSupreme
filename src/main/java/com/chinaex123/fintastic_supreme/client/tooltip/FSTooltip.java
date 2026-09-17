@@ -1,4 +1,4 @@
-package com.chinaex123.fintastic_supreme.client;
+package com.chinaex123.fintastic_supreme.client.tooltip;
 
 import com.chinaex123.fintastic_supreme.FintasticSupreme;
 import com.chinaex123.fintastic_supreme.init.FSItems;

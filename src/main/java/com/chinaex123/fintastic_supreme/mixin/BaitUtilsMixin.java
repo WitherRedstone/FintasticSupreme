@@ -24,16 +24,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.*;
 
 /**
- * 鱼饵工具类 Mixin
- * 用于向 Tide 模组注册自定义鱼饵及其属性（速度、幸运等）
+ * 鱼饵工具类 Mixin。
+ * <p>
+ * 用于向 Tide 模组注册自定义鱼饵及其属性（速度、幸运、板条箱概率）。
+ * 通过注入 Tide 的 isBait、getBaitData 与 getCrateChance 方法，
+ * 使自定义鱼饵能被正确识别并应用对应加成。
  */
 @Mixin(BaitUtils.class)
 public class BaitUtilsMixin {
 
-    // 预定义鱼饵属性映射
+    /** 预定义鱼饵属性映射，键为物品，值为对应配置 */
     @Unique
     private static final Map<Item, BaitConfig> BAIT_CONFIGS = new HashMap<>();
 
+    // 初始化所有自定义鱼饵的配置
     static {
         // 鱼饵
         BAIT_CONFIGS.put(FSItems.ADVANCED_BAIT.get(), new BaitConfig("fintastic_supreme:advanced_bait", 5, 0, 0));
@@ -50,10 +54,21 @@ public class BaitUtilsMixin {
         BAIT_CONFIGS.put(FSItems.MASTER_MAGNETIC_BAIT.get(), new BaitConfig("fintastic_supreme:master_magnetic_bait", 5, 0, 75));
     }
 
+    /**
+     * 鱼饵配置记录。
+     *
+     * @param id          鱼饵标识符
+     * @param speed       速度加成
+     * @param luck        幸运加成
+     * @param crateChance 板条箱掉落概率加成
+     */
     private record BaitConfig(String id, int speed, int luck, int crateChance) {}
 
     /**
-     * 注入 isBait 方法，让 Tide 识别我们的自定义物品为合法鱼饵
+     * 注入 isBait 方法，让 Tide 识别自定义物品为合法鱼饵。
+     *
+     * @param stack 待判断的物品堆
+     * @param cir   返回值回调
      */
     @Inject(method = "isBait", at = @At("HEAD"), cancellable = true, remap = false)
     private static void injectIsBait(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
@@ -63,7 +78,10 @@ public class BaitUtilsMixin {
     }
 
     /**
-     * 注入 getBaitData 方法，提供鱼饵的速度和幸运加成数据
+     * 注入 getBaitData 方法，提供鱼饵的速度和幸运加成数据。
+     *
+     * @param stack 待查询的物品堆
+     * @param cir   返回值回调
      */
     @Inject(method = "getBaitData", at = @At("HEAD"), cancellable = true, remap = false)
     private static void injectGetBaitData(ItemStack stack, CallbackInfoReturnable<Optional<BaitData>> cir) {
@@ -75,7 +93,10 @@ public class BaitUtilsMixin {
     }
 
     /**
-     * 注入 getCrateChance 方法，处理增加板条箱掉落概率的逻辑
+     * 注入 getCrateChance 方法，处理增加板条箱掉落概率的逻辑。
+     *
+     * @param stack 待查询的物品堆
+     * @param cir   返回值回调
      */
     @Inject(method = "getCrateChance", at = @At("HEAD"), cancellable = true, remap = false)
     private static void injectGetCrateChance(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
